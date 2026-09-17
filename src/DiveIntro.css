@@ -1,0 +1,191 @@
+/* =====================================================================
+   DiveIntro — the threshold. A warm orange-to-red field (gradient, not
+   a photo) carrying one oversized line. The hero-shift runway above
+   pulls this section up beneath it via the -100vh margin defined in
+   HeroReveal.css; nothing here pins or scrubs.
+   ===================================================================== */
+
+.dive-section {
+  position: relative;
+  /* Stacking fix: the sticky hero above carries z-index 1. Without our
+     own z-index this section never forms a stacking context, so the
+     title's z-index escapes to the root and paints over the hero photo
+     while our background stays trapped beneath it. z-index 2 makes the
+     whole section — opaque gradient and text together — one curtain
+     that slides up over the pinned hero. The base background below is
+     fully opaque from the first frame; nothing fades in separately. */
+  z-index: 2;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  overflow: clip;
+  color: var(--text-h);
+  background:
+    radial-gradient(
+      120% 85% at 50% -10%,
+      rgba(255, 199, 112, 0.42),
+      transparent 56%
+    ),
+    radial-gradient(
+      130% 95% at 50% 115%,
+      rgba(120, 34, 4, 0.55),
+      transparent 62%
+    ),
+    linear-gradient(168deg, #f28a17 0%, var(--accent) 50%, #bd3f08 100%);
+}
+
+/* One slow-breathing highlight so the field feels lit, not printed. */
+.dive-section::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(
+    38% 30% at 50% 42%,
+    rgba(255, 224, 178, 0.22),
+    transparent 70%
+  );
+  animation: dive-breathe 6.5s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes dive-breathe {
+  from {
+    transform: scale(1) translateY(0);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(1.12) translateY(2%);
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* The line — textured inside the letterforms, then solid              */
+/* ------------------------------------------------------------------ */
+
+.dive-section__title {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 0 1.25rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.6rem, 9.5vw, 8rem);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  text-align: center;
+
+  /* The traveling texture, clipped to the glyphs. */
+  background-image: linear-gradient(
+    108deg,
+    #4a1804 0%,
+    #ffd9a4 22%,
+    #7a2a08 46%,
+    #ffe9c9 68%,
+    #4a1804 100%
+  );
+  background-size: 280% 100%;
+  background-position: 0% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.dive-section.is-in .dive-section__title {
+  animation:
+    dive-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both,
+    dive-pan 1.6s linear infinite,
+    dive-settle 0.55s ease-out 1.25s forwards;
+}
+
+@keyframes dive-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dive-pan {
+  to {
+    background-position: 280% 0;
+  }
+}
+
+/* Once the section rests, the ink pours in and hides the texture. */
+@keyframes dive-settle {
+  to {
+    -webkit-text-fill-color: var(--text-h);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Scroll cue — dot over a thin thread                                 */
+/* ------------------------------------------------------------------ */
+
+.dive-section__cue {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.4rem, 4.5svh, 2.8rem);
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 0.65rem;
+  transform: translateX(-50%);
+  color: var(--text-h);
+}
+
+.dive-section__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: currentColor;
+  animation: dive-pulse 2.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes dive-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(0.55);
+    opacity: 0.45;
+  }
+}
+
+.dive-section__line {
+  width: 1px;
+  height: 3.2rem;
+  background: linear-gradient(to bottom, currentColor, transparent);
+  opacity: 0.55;
+}
+
+/* ------------------------------------------------------------------ */
+/* Reduced motion — no texture pass, the line lands solid immediately  */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .dive-section::before {
+    animation: none;
+  }
+
+  .dive-section__title,
+  .dive-section.is-in .dive-section__title {
+    background: none;
+    -webkit-text-fill-color: var(--text-h);
+    color: var(--text-h);
+    animation: none;
+  }
+
+  .dive-section__dot {
+    animation: none;
+  }
+}

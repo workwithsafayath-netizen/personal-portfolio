@@ -1,0 +1,141 @@
+/* =====================================================================
+   IntroLoader — monogram draw-in, hold, lift.
+   All timing lives in custom properties so the choreography reads as
+   one score: draw → hold → lift.
+   ===================================================================== */
+
+.intro-loader {
+  --srt-draw-delay: 0.3s;
+  --srt-draw-duration: 1.9s;
+  --srt-hold: 0.4s;
+  --srt-lift-duration: 0.7s;
+  --srt-lift-delay: calc(
+    var(--srt-draw-delay) + var(--srt-draw-duration) + var(--srt-hold)
+  );
+
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background-color: var(--bg);
+  will-change: transform;
+  animation: srt-lift var(--srt-lift-duration) cubic-bezier(0.76, 0, 0.24, 1)
+    var(--srt-lift-delay) forwards;
+}
+
+/* Ambient layer — one accent, barely there, breathing behind the mark. */
+.intro-loader::before {
+  content: "";
+  position: absolute;
+  width: 64vmin;
+  height: 64vmin;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--accent-bg), transparent 72%);
+  animation: srt-breathe 2.6s ease-in-out infinite alternate;
+}
+
+/* Stage drifts against the lift — small parallax as the panel leaves. */
+.intro-loader__stage {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  will-change: transform;
+  animation: srt-drift var(--srt-lift-duration) cubic-bezier(0.76, 0, 0.24, 1)
+    var(--srt-lift-delay) forwards;
+}
+
+/* The name writes itself in: a single left-to-right clip wipe on the
+   display face reads as a pen line at loader scale. */
+.intro-loader__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.6rem, 13vw, 7.5rem);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--text-h);
+  white-space: nowrap;
+  clip-path: inset(-0.25em 100% -0.25em -0.05em);
+  animation: srt-wipe var(--srt-draw-duration)
+    cubic-bezier(0.6, 0.04, 0.25, 1) var(--srt-draw-delay) both;
+}
+
+/* Accent period after the signature — pops as the pen lifts. */
+.intro-loader__dot {
+  display: inline-block;
+  width: 0.14em;
+  height: 0.14em;
+  margin-left: 0.1em;
+  background-color: var(--accent);
+  animation: srt-dot 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)
+    calc(var(--srt-draw-delay) + var(--srt-draw-duration) + 0.05s) both;
+}
+
+.intro-loader__caption {
+  margin: 1.5rem 0 0;
+  /* padding-left cancels the trailing letter-spacing so the line sits
+     optically centered */
+  padding-left: 0.42em;
+  font-size: 0.72rem;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--text-dim);
+  animation: srt-caption 0.6s ease-out
+    calc(var(--srt-draw-delay) + var(--srt-draw-duration) * 0.92) both;
+}
+
+/* ---------------------------------------------------------------------
+   Keyframes
+   --------------------------------------------------------------------- */
+
+@keyframes srt-wipe {
+  to {
+    clip-path: inset(-0.25em -0.05em -0.25em -0.05em);
+  }
+}
+
+@keyframes srt-lift {
+  to {
+    transform: translateY(-101%);
+  }
+}
+
+@keyframes srt-drift {
+  to {
+    transform: translateY(9vh);
+  }
+}
+
+@keyframes srt-caption {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes srt-dot {
+  from {
+    transform: scale(0) rotate(0deg);
+  }
+  to {
+    transform: scale(1) rotate(45deg);
+  }
+}
+
+@keyframes srt-breathe {
+  from {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1.07);
+    opacity: 1;
+  }
+}

@@ -1,0 +1,331 @@
+/* =====================================================================
+   Contact — the invitation. Rows invert through a cursor-anchored
+   circular reveal: an inverted duplicate of each row sits under a
+   clip-path circle whose radius (--cr) and center (--cx / --cy) are
+   driven per frame from JS.
+   ===================================================================== */
+
+.contact {
+  position: relative;
+  overflow: clip;
+  padding: clamp(5rem, 11svh, 7.5rem) clamp(1.25rem, 6vw, 5rem)
+    clamp(4.5rem, 9svh, 6.5rem);
+}
+
+/* Ambient layer — accent wash hugging the left edge this time. */
+.contact::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    42rem 42rem at 2% 30%,
+    var(--accent-bg),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.contact__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 5rem);
+}
+
+@media (min-width: 60rem) {
+  .contact__inner {
+    grid-template-columns: 1.15fr 1fr;
+    align-items: start;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Furniture                                                           */
+/* ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------ */
+/* Lede column                                                         */
+/* ------------------------------------------------------------------ */
+
+.contact__kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0 0 1rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.contact__kicker::before {
+  content: "";
+  width: 2.4rem;
+  height: 1px;
+  background-color: var(--accent);
+}
+
+.contact__title {
+  margin: 0;
+  font-size: clamp(2.1rem, 5.4vw, 4.2rem);
+  font-weight: 750;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.contact__line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.contact__line-inner {
+  display: block;
+}
+
+.contact__line--indent {
+  padding-left: clamp(1.2rem, 5vw, 4rem);
+  font-weight: 460;
+}
+
+.contact__line--indent em {
+  font-style: normal;
+  font-weight: 750;
+  color: var(--accent);
+}
+
+.contact__copy {
+  margin: clamp(1.4rem, 3svh, 2rem) 0 0;
+  max-width: 44ch;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.contact__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: clamp(1.6rem, 3.4svh, 2.4rem) 0 0;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--border);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.contact__pulse {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent);
+}
+
+.contact__pulse::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  animation: contact-ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes contact-ping {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  80%,
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+.contact__langs {
+  margin: 1.1rem 0 0;
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ------------------------------------------------------------------ */
+/* Contact block                                                       */
+/* ------------------------------------------------------------------ */
+
+.contact__label {
+  margin: 0 0 0.8rem;
+  font-size: 0.64rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.contact__label + .contact__label,
+.contact__socials + .contact__label,
+.contact__email-wrap + .contact__label {
+  margin-top: clamp(2rem, 4svh, 2.8rem);
+}
+
+.contact__email-wrap {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--border);
+}
+
+/* ------------------------------------------------------------------ */
+/* The rows + circular reveal                                          */
+/* ------------------------------------------------------------------ */
+
+.contact__row {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  color: var(--text-h);
+}
+
+.contact__row--email {
+  flex: 1;
+  min-width: 0;
+  /* The row is a container so the email address can be sized in cqw —
+     one line, every width, no mid-word breaks. */
+  container-type: inline-size;
+}
+
+.contact__row-face {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.15rem 1.3rem;
+}
+
+.contact__row--email .contact__row-face {
+  padding: 1.3rem 1.4rem;
+}
+
+.contact__email-text {
+  font-family: var(--font-display);
+  font-weight: 600;
+  /* 26 glyphs ≈ 13.2em wide in Bricolage, so 7.1cqw of the row keeps the
+     whole address on one line even at the narrowest column. */
+  font-size: clamp(0.8rem, 7.1cqw, 1.45rem);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* The inverted duplicate — revealed through the circle. */
+.contact__row-fill {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background-color: var(--accent);
+  color: var(--accent-ink);
+  clip-path: circle(var(--cr, 0px) at var(--cx, 50%) var(--cy, 50%));
+  pointer-events: none;
+}
+
+.contact__row-fill .contact__row-face {
+  height: 100%;
+}
+
+.contact__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+.contact__platform {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+}
+
+.contact__handle {
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  transition: color 0.3s ease;
+}
+
+.contact__row-fill .contact__handle {
+  color: rgba(25, 16, 7, 0.72);
+}
+
+.contact__go {
+  display: grid;
+  place-items: center;
+  flex: none;
+  color: var(--text-dim);
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.3s ease;
+}
+
+.contact__row:hover .contact__go {
+  transform: translate(2px, -2px);
+  color: var(--accent);
+}
+
+.contact__row-fill .contact__go {
+  color: var(--accent-ink);
+}
+
+/* Reduced motion: the circle becomes a crossfade. */
+.contact.is-static .contact__row-fill {
+  clip-path: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.contact.is-static .contact__row.is-in .contact__row-fill {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* Socials list + copy button                                          */
+/* ------------------------------------------------------------------ */
+
+.contact__socials {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+}
+
+.contact__socials li + li {
+  border-top: 1px solid var(--border);
+}
+
+.contact__copy-btn {
+  flex: none;
+  border: 0;
+  border-left: 1px solid var(--border);
+  background: transparent;
+  padding: 0 1.3rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.contact__copy-btn:hover {
+  color: var(--accent);
+}
+
+.contact__copy-btn.is-copied {
+  color: var(--accent-ink);
+  background-color: var(--accent);
+}

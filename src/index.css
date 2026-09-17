@@ -1,0 +1,207 @@
+@import "tailwindcss";
+
+/* =====================================================================
+   THEME — the only place colors live.
+   Twelve custom properties, defined once in :root, flipped wholesale by
+   prefers-color-scheme. Every component reads these and hardcodes
+   nothing. One accent hue only — warm orange — across both schemes.
+   ===================================================================== */
+
+:root {
+  /* surfaces — warm paper, never pure white */
+  --bg: #f4f1ec;
+  --bg-soft: #ebe6dc;
+
+  /* ink — warm off-black, never pure black */
+  --text: #262119;
+  --text-h: #161208;
+  --text-dim: #776e5e;
+
+  /* lines */
+  --border: #ded5c6;
+
+  /* the one accent */
+  --accent: #e8590c;
+  --accent-hi: #ff6d1f; /* hover / glow state of the same hue */
+  --accent-bg: rgba(232, 89, 12, 0.07); /* accent wash for fills */
+  --accent-ink: #191007; /* ink that sits on solid accent */
+
+  /* type */
+  --font-display: "Bricolage Grotesque", "Arial Narrow", sans-serif;
+  --font-body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* surfaces — warm charcoal, never pure black */
+    --bg: #141210;
+    --bg-soft: #1f1b16;
+
+    /* ink — warm off-white */
+    --text: #eae3d7;
+    --text-h: #f7f2e8;
+    --text-dim: #a29885;
+
+    /* lines */
+    --border: #2e2820;
+
+    /* the one accent, lifted slightly so it carries on dark ground */
+    --accent: #f26e1e;
+    --accent-hi: #ff8a3d;
+    --accent-bg: rgba(242, 110, 30, 0.14);
+    --accent-ink: #191007;
+
+    color-scheme: dark;
+  }
+}
+
+/* =====================================================================
+   BASE — fluid type scale, hidden scrollbar (Lenis owns scrolling),
+   editorial defaults. Kept in the base layer so utilities still win.
+   ===================================================================== */
+
+@layer base {
+  html {
+    /* Fluid root: 15px on small phones → 18px on wide desktops.
+       Every rem-based size (Tailwind utilities included) breathes
+       with the viewport, so the editorial scale stays proportional. */
+    font-size: clamp(93.75%, 88% + 0.35vw, 112.5%);
+
+    /* Full-page smooth-scroll site: no OS scrollbar chrome. */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* legacy Edge */
+    overscroll-behavior-y: none;
+  }
+
+  html::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    color: var(--text-h);
+    font-weight: 600;
+    line-height: 1.04;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  img,
+  svg,
+  canvas,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+
+  button,
+  input,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+}
+
+/* =====================================================================
+   LENIS — recommended companion rules. App mounts the Lenis instance
+   in a later stage; these keep native and smooth scrolling in agreement.
+   ===================================================================== */
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* =====================================================================
+   MOTION CONTRACT — binding for every later stage:
+   - Pointer/scroll effects write CSS custom properties (--mx, --my, …)
+     on <html>, coalesced to ONE style write per requestAnimationFrame.
+     Never React state — never a re-render.
+   - prefers-reduced-motion is re-checked LIVE via matchMedia in JS
+     (GSAP, Lenis and ScrollTrigger all honor the current value).
+     The guard below covers pure-CSS motion.
+   ===================================================================== */
+
+/* Shared skeleton shimmer for loading states. */
+.skel {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-soft);
+}
+
+.skel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.16),
+    transparent
+  );
+  animation: skel-sheen 1.4s ease-in-out infinite;
+}
+
+@keyframes skel-sheen {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

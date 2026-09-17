@@ -1,0 +1,277 @@
+/* =====================================================================
+   AllWorks — the full index at #/works. Same card anatomy as the home
+   page's featured grid, opened up to every work in the store.
+   ===================================================================== */
+
+.allworks {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  overflow-y: auto;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.allworks__bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem clamp(1.25rem, 5vw, 4rem);
+  background-color: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.allworks__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.allworks__back svg {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.allworks__back:hover {
+  color: var(--accent);
+}
+
+.allworks__back:hover svg {
+  transform: translateX(-3px);
+}
+
+.allworks__count {
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ */
+/* Head                                                                */
+/* ------------------------------------------------------------------ */
+
+.allworks__inner {
+  width: min(80rem, 100%);
+  margin-inline: auto;
+  padding: clamp(3rem, 8svh, 5.5rem) clamp(1.25rem, 6vw, 5rem)
+    clamp(4rem, 9svh, 6.5rem);
+}
+
+.allworks__kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0 0 1rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.allworks__kicker::before {
+  content: "";
+  width: 2.4rem;
+  height: 1px;
+  background-color: var(--accent);
+}
+
+.allworks__title {
+  margin: 0;
+  font-size: clamp(2.2rem, 5.6vw, 4.4rem);
+  font-weight: 750;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.allworks__title em {
+  font-style: normal;
+  font-weight: 460;
+  color: var(--accent);
+}
+
+.allworks__standfirst {
+  margin: 1.2rem 0 0;
+  max-width: 46ch;
+  font-size: 0.98rem;
+  color: var(--text-dim);
+}
+
+/* ------------------------------------------------------------------ */
+/* Grid                                                                */
+/* ------------------------------------------------------------------ */
+
+.allworks__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(3rem, 6svh, 4.5rem);
+  margin-top: clamp(3rem, 7svh, 5rem);
+}
+
+@media (min-width: 54rem) {
+  .allworks__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(3.5rem, 7svh, 5.5rem) clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .allworks__grid .awork:nth-child(even) {
+    margin-top: clamp(2.5rem, 6svh, 4.5rem);
+  }
+}
+
+.awork {
+  display: grid;
+  gap: 1.1rem;
+  animation: awork-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+@keyframes awork-in {
+  from {
+    opacity: 0;
+    transform: translateY(34px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.awork__media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background-color: var(--bg-soft);
+  container-type: inline-size;
+}
+
+.awork__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--border);
+  transform: translate(12px, 12px);
+  pointer-events: none;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.45s ease;
+}
+
+.awork:hover .awork__media::after {
+  transform: translate(7px, 7px);
+  border-color: var(--accent);
+}
+
+.awork__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.awork:hover .awork__img {
+  transform: scale(1.04);
+}
+
+.awork__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0;
+  font-size: 0.64rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.awork__index {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.awork__category {
+  color: var(--text-dim);
+}
+
+.awork__name {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  transition: color 0.3s ease;
+}
+
+.awork:hover .awork__name {
+  color: var(--accent);
+}
+
+.awork__desc {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 0.92rem;
+  line-height: 1.58;
+  color: var(--text-dim);
+}
+
+.awork__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-h);
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  transition:
+    background-size 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.3s ease;
+}
+
+.awork__link svg {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.awork__link:hover {
+  background-size: 100% 1px;
+  color: var(--accent);
+}
+
+.awork__link:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* ------------------------------------------------------------------ */
+/* Loading + empty states                                              */
+/* ------------------------------------------------------------------ */
+
+.allworks__skel-line {
+  height: 1rem;
+  margin-top: 0.8rem;
+}
+
+.allworks__skel-line--short {
+  width: 60%;
+}
+
+.allworks__empty {
+  margin: clamp(3rem, 7svh, 5rem) 0 0;
+  padding: 2.6rem 1.4rem;
+  border: 1px dashed var(--border);
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--text-dim);
+}

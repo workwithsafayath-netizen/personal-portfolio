@@ -1,0 +1,749 @@
+/* =====================================================================
+   FeaturedWorks — four live builds in a staggered editorial grid.
+   The slot sketches below use each project's OWN palette — that is
+   project content, not site chrome; the site itself stays one accent.
+   ===================================================================== */
+
+.works {
+  position: relative;
+  overflow: clip;
+  padding: clamp(5rem, 11svh, 7.5rem) clamp(1.25rem, 6vw, 5rem)
+    clamp(4rem, 9svh, 6.5rem);
+}
+
+/* Ambient layer — accent wash low-right, balancing the earlier corners. */
+.works::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    46rem 46rem at 94% 78%,
+    var(--accent-bg),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.works__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+}
+
+/* ------------------------------------------------------------------ */
+/* Furniture                                                           */
+/* ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------ */
+/* Head                                                                */
+/* ------------------------------------------------------------------ */
+
+.works__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: clamp(3rem, 7svh, 5rem);
+}
+
+.works__kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0 0 1rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.works__kicker::before {
+  content: "";
+  width: 2.4rem;
+  height: 1px;
+  background-color: var(--accent);
+}
+
+.works__title {
+  margin: 0;
+  font-size: clamp(2.2rem, 5.6vw, 4.4rem);
+  font-weight: 750;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.works__line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.works__line-inner {
+  display: block;
+}
+
+.works__line--indent {
+  padding-left: clamp(1.2rem, 5vw, 4.5rem);
+  font-weight: 460;
+}
+
+.works__line--indent em {
+  font-style: normal;
+  font-weight: 750;
+  color: var(--accent);
+}
+
+.works__standfirst {
+  margin: 0;
+  max-width: 32ch;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+/* ------------------------------------------------------------------ */
+/* The grid                                                            */
+/* ------------------------------------------------------------------ */
+
+.works__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(3rem, 6svh, 4.5rem);
+}
+
+@media (min-width: 54rem) {
+  .works__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(3.5rem, 7svh, 5.5rem) clamp(2rem, 4vw, 3.5rem);
+  }
+
+  /* Editorial stagger — the second column runs half a card late.
+     margin (not transform) so GSAP's reveal transforms stay clean. */
+  .works__grid .work:nth-child(even) {
+    margin-top: clamp(2.5rem, 6svh, 4.5rem);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* One work                                                            */
+/* ------------------------------------------------------------------ */
+
+.work {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.work__media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background-color: var(--bg-soft);
+  container-type: inline-size; /* sketches type themselves to the slot */
+}
+
+/* Offset hairline that warms to the accent on hover — family trait. */
+.work__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--border);
+  transform: translate(12px, 12px);
+  pointer-events: none;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.45s ease;
+}
+
+.work:hover .work__media::after {
+  transform: translate(7px, 7px);
+  border-color: var(--accent);
+}
+
+.work__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.001);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.work:hover .work__img {
+  transform: scale(1.04);
+}
+
+/* Slot state: dashed inset tells the eye this frame is waiting. */
+.work__media--slot::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  z-index: 1;
+  border: 1px dashed var(--border);
+  pointer-events: none;
+}
+
+.work__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0;
+  font-size: 0.64rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.work__index {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.work:hover .work__index {
+  transform: translateY(-2px);
+}
+
+.work__category {
+  color: var(--text-dim);
+}
+
+.work__name {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  transition: color 0.3s ease;
+}
+
+.work:hover .work__name {
+  color: var(--accent);
+}
+
+.work__desc {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 0.92rem;
+  line-height: 1.58;
+  color: var(--text-dim);
+}
+
+.work__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-h);
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  transition:
+    background-size 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.3s ease;
+}
+
+.work__link svg {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.work__link:hover {
+  background-size: 100% 1px;
+  color: var(--accent);
+}
+
+.work__link:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* =====================================================================
+   Slot sketches — stand-ins painted in each project's own palette.
+   Sized with container-query units so they scale with the slot.
+   ===================================================================== */
+
+.work__sketch {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.work:hover .work__sketch {
+  transform: scale(1.03);
+}
+
+/* --- Healthcare: clinical white / teal, card carousel --------------- */
+
+.work__sketch--health {
+  background: #f2f9f8;
+}
+
+.sk {
+  position: absolute;
+  display: block;
+}
+
+.sk-health__topbar {
+  top: 7%;
+  left: 7%;
+  right: 7%;
+  height: 5%;
+  display: flex;
+  align-items: center;
+  gap: 4%;
+}
+
+.sk-health__topbar i {
+  width: 12%;
+  height: 26%;
+  border-radius: 2px;
+  background: #bfe0db;
+}
+
+.sk-health__topbar i:first-child {
+  width: 7%;
+  background: #0f766e;
+}
+
+.sk-health__lead {
+  top: 21%;
+  left: 7%;
+  width: 36%;
+  height: 5.5%;
+  border-radius: 2px;
+  background: #0f766e;
+}
+
+.sk-health__sub {
+  top: 30%;
+  left: 7%;
+  width: 24%;
+  height: 3%;
+  border-radius: 2px;
+  background: #a9d2cc;
+}
+
+.sk-health__cards {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  top: 42%;
+  bottom: 20%;
+  display: flex;
+  gap: 4%;
+}
+
+.sk-health__cards i {
+  flex: 1;
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #d3e7e4;
+  border-radius: 3px;
+}
+
+.sk-health__cards i::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 34%;
+  background: #e0f0ee;
+  border-bottom: 1px solid #d3e7e4;
+}
+
+.sk-health__cards i::after {
+  content: "";
+  position: absolute;
+  left: 10%;
+  right: 34%;
+  bottom: 16%;
+  height: 9%;
+  border-radius: 2px;
+  background: #bfe0db;
+}
+
+.sk-health__cards i:nth-child(2) {
+  transform: translateY(-7%);
+  border-color: #0f766e;
+  box-shadow: 0 12px 26px -14px rgba(15, 118, 110, 0.45);
+}
+
+.sk-health__dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8%;
+  display: flex;
+  justify-content: center;
+  gap: 1.6cqw;
+}
+
+.sk-health__dots i {
+  width: 1.5cqw;
+  height: 1.5cqw;
+  min-width: 5px;
+  min-height: 5px;
+  border-radius: 50%;
+  background: #b7d8d3;
+  animation: sk-carousel 3.9s infinite;
+}
+
+.sk-health__dots i:nth-child(2) {
+  animation-delay: 1.3s;
+}
+
+.sk-health__dots i:nth-child(3) {
+  animation-delay: 2.6s;
+}
+
+@keyframes sk-carousel {
+  0%,
+  26% {
+    background: #0f766e;
+  }
+  34%,
+  100% {
+    background: #b7d8d3;
+  }
+}
+
+/* --- Snackza: deep green, orange appetite --------------------------- */
+
+.work__sketch--snackza {
+  background: #0d2818;
+}
+
+.sk-snackza__nav {
+  position: absolute;
+  top: 8%;
+  left: 8%;
+  right: 8%;
+  height: 4%;
+  display: flex;
+  align-items: center;
+  gap: 5%;
+}
+
+.sk-snackza__nav i {
+  width: 16%;
+  height: 34%;
+  border-radius: 99px;
+  background: rgba(246, 240, 228, 0.35);
+}
+
+.sk-snackza__nav i:first-child {
+  width: 9%;
+  background: #f97316;
+}
+
+.sk-snackza__headline {
+  position: absolute;
+  left: 8%;
+  top: 24%;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 750;
+  font-size: 9.5cqw;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: #f6f0e4;
+}
+
+.sk-snackza__headline em {
+  font-style: normal;
+  color: #f97316;
+}
+
+.sk-snackza__plate {
+  position: absolute;
+  right: 8%;
+  bottom: 16%;
+  width: 30cqw;
+  max-width: 46%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #fb923c, #f97316 58%, #c2540a);
+  animation: sk-plate 5.5s ease-in-out infinite alternate;
+}
+
+.sk-snackza__plate::after {
+  content: "";
+  position: absolute;
+  inset: 13%;
+  border-radius: 50%;
+  border: 2px solid rgba(13, 40, 24, 0.55);
+}
+
+@keyframes sk-plate {
+  from {
+    transform: translateY(0) rotate(0deg);
+  }
+  to {
+    transform: translateY(-5%) rotate(8deg);
+  }
+}
+
+.sk-snackza__pill {
+  position: absolute;
+  left: 8%;
+  bottom: 12%;
+  padding: 0.85em 1.7em;
+  font-size: 3.1cqw;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #14301f;
+  background: #f97316;
+  border-radius: 99px;
+}
+
+/* --- Fitness Fast: black ground, loud sports type -------------------- */
+
+.work__sketch--fitness {
+  background: #0b0b0b;
+}
+
+.sk-fitness__slash {
+  position: absolute;
+  left: -12%;
+  right: -12%;
+  top: 44%;
+  height: 15%;
+  background: #ff6a00;
+  transform: rotate(-9deg);
+  opacity: 0.92;
+}
+
+.sk-fitness__headline {
+  position: absolute;
+  left: 8%;
+  top: 16%;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 10cqw;
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  transform: skewX(-5deg);
+  color: #ff6a00;
+}
+
+.sk-fitness__headline em {
+  font-style: normal;
+  color: #f2efe9;
+}
+
+.sk-fitness__meta {
+  position: absolute;
+  left: 8%;
+  bottom: 10%;
+  display: flex;
+  align-items: center;
+  gap: 2.4cqw;
+}
+
+.sk-fitness__meta i {
+  width: 14cqw;
+  height: 2px;
+  background: rgba(242, 239, 233, 0.4);
+}
+
+.sk-fitness__meta b {
+  font-size: 3cqw;
+  letter-spacing: 0.4em;
+  color: rgba(242, 239, 233, 0.75);
+}
+
+/* --- Ember Essence: near-black, gold light, serif -------------------- */
+
+.work__sketch--ember {
+  background: radial-gradient(120% 130% at 50% -10%, #261b0f, #120d08 72%);
+}
+
+.sk-ember__glow {
+  position: absolute;
+  left: 50%;
+  top: 34%;
+  width: 60%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 162, 39, 0.3), transparent 68%);
+  filter: blur(6px);
+  animation: sk-glow 4.5s ease-in-out infinite alternate;
+}
+
+@keyframes sk-glow {
+  from {
+    opacity: 0.65;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+}
+
+.sk-ember__wordmark {
+  position: absolute;
+  top: 17%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 7cqw;
+  letter-spacing: 0.02em;
+  color: #e9dfc8;
+}
+
+.sk-ember__wordmark i {
+  font-style: italic;
+  color: #c9a227;
+}
+
+.sk-ember__wordmark span {
+  display: block;
+  margin-top: 1.4em;
+  font-family: var(--font-body);
+  font-size: 2.6cqw;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: rgba(233, 223, 200, 0.55);
+}
+
+.sk-ember__gallery {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 10%;
+  height: 26%;
+  display: flex;
+  gap: 3%;
+}
+
+.sk-ember__gallery i {
+  flex: 1;
+  background: linear-gradient(160deg, #241a10, #17100a);
+  border: 1px solid #3a2c18;
+}
+
+.sk-ember__gallery i:nth-child(2) {
+  transform: translateY(-9%);
+  border-color: rgba(201, 162, 39, 0.65);
+}
+
+/* --- No theme, no image: quiet frame -------------------------------- */
+
+.work__sketch--blank {
+  display: grid;
+  place-items: center;
+  background-color: var(--bg-soft);
+}
+
+.sk-blank__mark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 12cqw;
+  letter-spacing: 0.08em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--border);
+}
+
+/* ------------------------------------------------------------------ */
+/* More works — the door to the full index                             */
+/* ------------------------------------------------------------------ */
+
+.works__more {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  margin-top: clamp(3rem, 7svh, 5rem);
+  padding: clamp(1.2rem, 3svh, 1.7rem) clamp(1.4rem, 3vw, 2.2rem);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--text-h);
+  background-color: var(--bg-soft);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.4s ease;
+}
+
+/* Accent wash sweeps up from the bottom on hover. */
+.works__more::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent-bg);
+  transform: scaleY(0);
+  transform-origin: bottom center;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.works__more:hover {
+  border-color: var(--accent);
+}
+
+.works__more:hover::before {
+  transform: scaleY(1);
+}
+
+.works__more-label {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  letter-spacing: -0.015em;
+}
+
+.works__more-count {
+  position: relative;
+  margin-left: auto;
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: right;
+  transition: color 0.3s ease;
+}
+
+.works__more:hover .works__more-count {
+  color: var(--accent);
+}
+
+.works__more-arrow {
+  position: relative;
+  font-size: 1.6rem;
+  color: var(--accent);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.works__more:hover .works__more-arrow {
+  transform: translateX(0.5rem);
+}
+
+/* ------------------------------------------------------------------ */
+/* Loading + empty states                                              */
+/* ------------------------------------------------------------------ */
+
+.works__skel-line {
+  height: 1rem;
+  margin-top: 0.8rem;
+}
+
+.works__skel-line--short {
+  width: 60%;
+}
+
+.works__empty {
+  margin: 0;
+  padding: 2.2rem 1.4rem;
+  border: 1px dashed var(--border);
+  text-align: center;
+  font-size: 0.92rem;
+  color: var(--text-dim);
+}

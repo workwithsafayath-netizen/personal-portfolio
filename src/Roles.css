@@ -1,0 +1,318 @@
+/* =====================================================================
+   Roles — hover/tap index of the three disciplines, with cursor-trailing
+   proof-of-work images. Rows are the typography; the floats are the
+   evidence.
+   ===================================================================== */
+
+.roles {
+  position: relative;
+  min-height: 100svh;
+  overflow: clip;
+  padding: clamp(5rem, 11svh, 7.5rem) clamp(1.25rem, 6vw, 5rem);
+}
+
+/* Ambient layer — one accent wash low and left, away from Hero's. */
+.roles::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    44rem 44rem at 6% 92%,
+    var(--accent-bg),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.roles__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+}
+
+/* ------------------------------------------------------------------ */
+/* Furniture                                                           */
+/* ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------ */
+/* Head                                                                */
+/* ------------------------------------------------------------------ */
+
+.roles__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: clamp(2.5rem, 6svh, 4.5rem);
+}
+
+.roles__kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0 0 1rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.roles__kicker::before {
+  content: "";
+  width: 2.4rem;
+  height: 1px;
+  background-color: var(--accent);
+}
+
+.roles__title {
+  margin: 0;
+  font-size: clamp(2rem, 5.2vw, 4.1rem);
+  font-weight: 750;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.roles__standfirst {
+  margin: 0;
+  max-width: 34ch;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+/* ------------------------------------------------------------------ */
+/* The index list                                                      */
+/* ------------------------------------------------------------------ */
+
+.roles__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.roles__item {
+  border-top: 1px solid var(--border);
+}
+
+.roles__item:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.roles__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  width: 100%;
+  padding: clamp(1.5rem, 3.4svh, 2.3rem) clamp(0.25rem, 1vw, 0.75rem);
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Accent wash that sweeps in from the left on hover / focus / pin. */
+.roles__row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent-bg);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.roles__item.is-active .roles__row::before {
+  transform: scaleX(1);
+}
+
+.roles__index {
+  width: 2.4rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.25em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+  transition: color 0.3s ease;
+}
+
+.roles__item.is-active .roles__index {
+  color: var(--accent);
+}
+
+.roles__body {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: start;
+}
+
+.roles__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 3.8vw, 2.9rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--text-h);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.roles__item.is-active .roles__name {
+  transform: translateX(0.6rem);
+}
+
+.roles__desc {
+  max-width: 58ch;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+
+.roles__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.roles__tags span {
+  position: relative;
+}
+
+.roles__tags span + span::before {
+  content: "·";
+  position: absolute;
+  right: 100%;
+  margin-right: 0.5rem;
+  color: var(--accent);
+}
+
+.roles__arrow {
+  justify-self: end;
+  font-size: 1.5rem;
+  color: var(--text-dim);
+  opacity: 0;
+  transform: translateX(-0.6rem);
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.35s ease,
+    color 0.3s ease;
+}
+
+.roles__item.is-active .roles__arrow {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--accent);
+}
+
+/* ------------------------------------------------------------------ */
+/* The trailing floats (portaled to <body>)                            */
+/* ------------------------------------------------------------------ */
+
+.roles__floats {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+
+/*
+ * Outer element owns POSITION only — driven per frame via --fx / --fy,
+ * never transitioned (a transition here would lag the cursor).
+ * Inner element owns the reveal choreography (tilt + scale), which is
+ * safe to transition because it only changes on state flips.
+ * Defaults are mid-viewport so a pathological first paint can never
+ * flash in the top-left corner.
+ */
+.roles__float {
+  --fx: 50vw;
+  --fy: 50vh;
+
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: clamp(230px, 26vw, 380px);
+  aspect-ratio: 4 / 3;
+  margin: 0;
+  opacity: 0;
+  transform: translate3d(var(--fx), var(--fy), 0) translate(-50%, -54%);
+  transition: opacity 0.35s ease;
+  will-change: transform;
+}
+
+.roles__float-inner {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background-color: var(--bg-soft);
+  box-shadow: 0 30px 70px -34px rgba(10, 6, 2, 0.55);
+  transform: rotate(var(--tilt, 0deg)) scale(0.92);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.roles__float img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Loading skeletons for the index rows. */
+.roles__skel-chip {
+  width: 2.4rem;
+  height: 0.9rem;
+}
+
+.roles__skel-line {
+  display: block;
+  height: 1.4rem;
+  width: min(24rem, 70%);
+}
+
+.roles__skel-line--short {
+  height: 0.85rem;
+  width: min(30rem, 88%);
+}
+
+/* Role without an image yet — a quiet monogram frame. */
+.roles__float-mark {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2rem;
+  letter-spacing: 0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--border);
+}
+
+.roles__float.is-visible {
+  opacity: 1;
+}
+
+.roles__float.is-visible .roles__float-inner {
+  transform: rotate(var(--tilt, 0deg)) scale(1);
+}
+
+/* Pinned (tapped) floats get a persistent accent edge as feedback. */
+.roles__float.is-pinned .roles__float-inner {
+  border-color: var(--accent);
+}
+
+/* Touch devices: no cursor to trail, so the preview parks centered in
+   the viewport — big enough to read, gone on scroll/retap/timeout. */
+.roles__float.is-fixed {
+  left: 50%;
+  top: 46%;
+  width: min(80vw, 26rem);
+  transform: translate(-50%, -50%);
+  z-index: 70;
+}

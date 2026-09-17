@@ -1,0 +1,602 @@
+/* =====================================================================
+   Admin — the owner's control room. Deliberately reads as an editor,
+   not as the public site: tighter rhythm, bordered panels, mono-ish
+   small-caps labels. Also hosts the tiny launcher that opens it.
+   ===================================================================== */
+
+/* ------------------------------------------------------------------ */
+/* Shell                                                               */
+/* ------------------------------------------------------------------ */
+
+.admin {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  overflow-y: auto;
+  background-color: var(--bg);
+  color: var(--text);
+  scrollbar-width: thin;
+}
+
+.admin__bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem clamp(1.25rem, 5vw, 3rem);
+  background-color: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.admin__brand {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 750;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  color: var(--text-h);
+}
+
+.admin__brand em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.admin__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin__link {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition:
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.admin__link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.admin__main {
+  width: min(64rem, 100%);
+  margin-inline: auto;
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 5vw, 3rem) 6rem;
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+/* ------------------------------------------------------------------ */
+/* Panels + cards                                                      */
+/* ------------------------------------------------------------------ */
+
+.admin__panel {
+  border: 1px solid var(--border);
+  background-color: var(--bg-soft);
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.admin__title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.admin__note {
+  margin: 0.4rem 0 1.4rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  max-width: 56ch;
+}
+
+.admin__duo {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 44rem) {
+  .admin__duo {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.admin__stack {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.admin__card {
+  border: 1px solid var(--border);
+  background-color: var(--bg);
+  padding: 1.1rem 1.2rem 1.3rem;
+}
+
+.admin__card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-bottom: 0.9rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px dashed var(--border);
+}
+
+.admin__badge {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.admin__card-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-h);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin__spacer {
+  flex: 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* Fields                                                              */
+/* ------------------------------------------------------------------ */
+
+.admin__fields {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.admin__pair {
+  display: grid;
+  gap: 0.9rem;
+}
+
+@media (min-width: 40rem) {
+  .admin__pair {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.admin__field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.admin__label {
+  font-size: 0.6rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.admin__field input,
+.admin__field textarea,
+.admin__field select {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background-color: var(--bg-soft);
+  color: var(--text-h);
+  font-size: 0.9rem;
+  transition: border-color 0.25s ease;
+}
+
+.admin__field textarea {
+  resize: vertical;
+  min-height: 3.2rem;
+  line-height: 1.5;
+}
+
+.admin__field input:focus,
+.admin__field textarea:focus,
+.admin__field select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ------------------------------------------------------------------ */
+/* Image field                                                         */
+/* ------------------------------------------------------------------ */
+
+.admin__imgfield {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.admin__preview {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background-color: var(--bg-soft);
+}
+
+.admin__preview.is-empty {
+  border-style: dashed;
+  display: grid;
+  place-items: center;
+}
+
+.admin__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin__preview-note {
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.admin__preview-busy {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background-color: rgba(12, 8, 4, 0.55);
+  color: #f6f0e6;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.admin__imgrow {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* ------------------------------------------------------------------ */
+/* Buttons                                                             */
+/* ------------------------------------------------------------------ */
+
+.admin__btn {
+  padding: 0.5rem 0.95rem;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  background-color: var(--accent);
+  color: var(--accent-ink);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.admin__btn:hover {
+  background-color: var(--accent-hi);
+  border-color: var(--accent-hi);
+}
+
+.admin__btn:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.admin__btn--ghost {
+  background-color: transparent;
+  color: var(--text-dim);
+  border-color: var(--border);
+}
+
+.admin__btn--ghost:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background-color: transparent;
+}
+
+.admin__btn--ghost.is-danger {
+  color: #d23b2e;
+  border-color: #d23b2e;
+}
+
+.admin__icon {
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.admin__icon:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.admin__icon:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.admin__icon--danger:hover:not(:disabled) {
+  color: #d23b2e;
+  border-color: #d23b2e;
+}
+
+.admin__add {
+  margin-top: 1.1rem;
+  width: 100%;
+  padding: 0.85rem;
+  border: 1px dashed var(--border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.admin__add:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background-color: var(--accent-bg);
+}
+
+/* ------------------------------------------------------------------ */
+/* Toast                                                               */
+/* ------------------------------------------------------------------ */
+
+.admin__toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.4rem;
+  z-index: 210;
+  transform: translateX(-50%);
+  padding: 0.65rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  animation: admin-toast 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.admin__toast--ok {
+  background-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.admin__toast--err {
+  background-color: #d23b2e;
+  color: #fff5f2;
+}
+
+@keyframes admin-toast {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Auth gate + login                                                   */
+/* ------------------------------------------------------------------ */
+
+.admin--gate {
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+}
+
+.admin__spinner {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  animation: admin-spin 0.8s linear infinite;
+}
+
+@keyframes admin-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.login {
+  width: min(24rem, 100%);
+  display: grid;
+  gap: 0.9rem;
+  padding: clamp(1.6rem, 4vw, 2.4rem);
+  border: 1px solid var(--border);
+  background-color: var(--bg-soft);
+}
+
+.login__brand {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 750;
+  font-size: 1.2rem;
+  color: var(--text-h);
+}
+
+.login__brand em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.login__note {
+  margin: -0.4rem 0 0.4rem;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.login__error {
+  margin: 0;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid #d23b2e;
+  color: #d23b2e;
+  font-size: 0.8rem;
+}
+
+.login__submit {
+  width: 100%;
+  padding: 0.7rem;
+}
+
+.admin__who {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  max-width: 36vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin__banner {
+  margin: 0;
+  padding: 0.7rem clamp(1.25rem, 5vw, 3rem);
+  background-color: rgba(210, 59, 46, 0.12);
+  border-bottom: 1px solid #d23b2e;
+  color: #b03327;
+  font-size: 0.8rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Featured switch                                                     */
+/* ------------------------------------------------------------------ */
+
+.admin__switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.admin__switch input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.admin__switch-track {
+  position: relative;
+  width: 2.1rem;
+  height: 1.15rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background-color: var(--bg-soft);
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.admin__switch-thumb {
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 50%;
+  background-color: var(--text-dim);
+  transform: translateY(-50%);
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.25s ease;
+}
+
+.admin__switch input:checked + .admin__switch-track {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.admin__switch input:checked + .admin__switch-track .admin__switch-thumb {
+  transform: translate(0.95rem, -50%);
+  background-color: var(--accent-ink);
+}
+
+.admin__switch input:focus-visible + .admin__switch-track {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.admin__switch-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ------------------------------------------------------------------ */
+/* Empty states + upload errors + skeletons                            */
+/* ------------------------------------------------------------------ */
+
+.admin__empty {
+  margin: 0;
+  padding: 1.4rem;
+  border: 1px dashed var(--border);
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.admin__imgerr {
+  font-size: 0.72rem;
+  color: #d23b2e;
+  align-self: center;
+}
+
+.admin__preview-busy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.admin__preview-busy .admin__spinner {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-color: rgba(246, 240, 230, 0.4);
+  border-top-color: #f6f0e6;
+}
+
+.admin__skel-line {
+  height: 1rem;
+  margin-bottom: 0.7rem;
+}
+
+.admin__skel-line--short {
+  width: 55%;
+}
+
+.admin__skel-box {
+  height: 8rem;
+}

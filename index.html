@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+      /* Full-page smooth-scroll site: the browser must never restore a
+         stale scroll position — not on reload, not from the back/forward
+         cache. Lenis always starts at the top. Runs before first paint
+         on purpose; do not move below the stylesheet links. */
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+      window.scrollTo(0, 0);
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Safayath Rahman Tamzid — self-taught AI-assisted graphic designer and prompt-based web developer. Chattogram, Bangladesh; open to remote work."
+    />
+    <meta name="theme-color" content="#f4f1ec" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141210" media="(prefers-color-scheme: dark)" />
+    <title>Safayath Rahman Tamzid — Designer &amp; Prompt Developer</title>
+    <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
+
+    <!-- Type: Bricolage Grotesque (editorial display) + Instrument Sans (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

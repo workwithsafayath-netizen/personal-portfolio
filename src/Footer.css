@@ -1,0 +1,239 @@
+/* =====================================================================
+   Footer — index, echo links, single copyright line; then the giant
+   wordmark pinned
+   to the viewport bottom via position: sticky.
+
+   Sticky note: the footer must never gain a transform or an
+   overflow:hidden ancestor — both would break the pin. overflow-x: clip
+   is safe because it does not create a scroll container.
+   ===================================================================== */
+
+.footer {
+  position: relative;
+  background-color: var(--bg-soft);
+  overflow-x: clip;
+}
+
+.footer__body {
+  min-height: 84svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(3rem, 8svh, 5rem);
+  padding: clamp(4rem, 9svh, 6rem) clamp(1.25rem, 6vw, 5rem)
+    clamp(3rem, 7svh, 4.5rem);
+}
+
+/* ------------------------------------------------------------------ */
+/* The body grid                                                       */
+/* ------------------------------------------------------------------ */
+
+.footer__grid {
+  display: grid;
+  gap: clamp(2.2rem, 5vw, 3.5rem);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 46rem) {
+  .footer__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 66rem) {
+  .footer__grid {
+    grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+  }
+}
+
+.footer__sign {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+  color: var(--text-h);
+}
+
+.footer__blurb {
+  margin: 0;
+  max-width: 34ch;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.footer__langs {
+  margin: 1.2rem 0 0;
+  font-size: 0.66rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.footer__col-title {
+  margin: 0 0 1.1rem;
+  font-size: 0.64rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.footer__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.footer__list a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.95rem;
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  transition:
+    background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.3s ease;
+}
+
+.footer__list a:hover {
+  color: var(--text-h);
+  background-size: 100% 1px;
+}
+
+.footer__ext {
+  font-size: 0.7rem;
+  color: var(--accent);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.footer__list a:hover .footer__ext {
+  transform: translate(2px, -2px);
+}
+
+.footer__plain {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+}
+
+.footer__clock {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.footer__meta {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+}
+
+.footer__meta p {
+  margin: 0;
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------ */
+/* The sticky wordmark                                                 */
+/* ------------------------------------------------------------------ */
+
+/*
+ * position: sticky; bottom: 0 — while the footer body above is still
+ * scrolling, the wordmark's natural slot is below the viewport, so the
+ * browser pins it to the bottom edge. It rides up like a curtain over
+ * the footer content (solid background, higher z-index), then lands in
+ * place when the page ends.
+ */
+.footer__mark {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: block;
+  background-color: var(--bg-soft);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  text-decoration: none;
+  padding: clamp(0.9rem, 2vw, 1.3rem) clamp(1rem, 3vw, 2rem)
+    clamp(1rem, 2.5vw, 1.6rem);
+  outline-offset: -4px;
+}
+
+.footer__mark-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: clamp(0.2rem, 1vw, 0.6rem);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.footer__mark-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.footer__mark-hint svg {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.footer__mark:hover .footer__mark-hint {
+  color: var(--accent);
+}
+
+.footer__mark:hover .footer__mark-hint svg {
+  transform: translateY(-3px);
+}
+
+/*
+ * Giant outlined glyphs, one line, scaled to the viewport.
+ * Outlined at rest; hovering pours the ink in and lets the tracking
+ * breathe. The period stays accent-filled — the signature mark.
+ */
+.footer__mark-text {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  /* Eight glyphs + the period: ~14.5vw keeps the full name on one line
+     at every breakpoint without wrapping. */
+  font-size: clamp(2.2rem, 14.5vw, 12rem);
+  line-height: 0.82;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--text-h);
+  transition:
+    color 0.55s ease,
+    letter-spacing 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (min-width: 40rem) {
+  .footer__mark-text {
+    -webkit-text-stroke-width: 3px;
+  }
+}
+
+.footer__mark-text em {
+  font-style: normal;
+  color: var(--accent);
+  -webkit-text-stroke: 0;
+}
+
+.footer__mark:hover .footer__mark-text {
+  color: var(--text-h);
+  letter-spacing: 0.01em;
+}

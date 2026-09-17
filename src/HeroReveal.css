@@ -1,0 +1,204 @@
+/* =====================================================================
+   HeroReveal — scroll-pinned runway + amoeba-mask cursor reveal.
+
+   .hero-shift is a 200vh runway; .reveal-section sticks inside it and
+   dims as the runway is consumed, then the dive section (pulled up by
+   -100vh) takes over. The suit layer is masked by an SVG circle run
+   through animated feTurbulence + feDisplacementMap — the same noise
+   distorts the glowing edge ring so mask and outline stay in lockstep.
+   ===================================================================== */
+
+.hero-shift {
+  position: relative;
+  height: 200vh;
+}
+
+.reveal-section {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  margin: 0;
+  padding: 0;
+  color: var(--hero-fg, #efe9d8);
+  z-index: 1;
+  will-change: filter;
+  backface-visibility: hidden;
+}
+
+/* The dive section slides up over the consumed runway's tail. */
+.hero-shift + .dive-section {
+  margin-top: -100vh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-shift {
+    height: auto;
+  }
+  .hero-shift + .dive-section {
+    margin-top: 0;
+  }
+  .reveal-section {
+    position: relative;
+    z-index: auto;
+    transform: none !important;
+    filter: none !important;
+    will-change: auto;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* The stage                                                           */
+/* ------------------------------------------------------------------ */
+
+.reveal {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  background: #000;
+  cursor: pointer;
+  isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.reveal:focus-visible {
+  outline: 2px solid var(--hero-fg, #efe9d8);
+  outline-offset: -4px;
+}
+
+.reveal-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Scrims — legibility bands over the photo                            */
+/* ------------------------------------------------------------------ */
+
+.reveal-scrim {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.reveal-scrim-top {
+  top: 0;
+  height: 30vh;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent);
+}
+
+.reveal-scrim-bottom {
+  bottom: 0;
+  height: 28vh;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+}
+
+/* ------------------------------------------------------------------ */
+/* The mask hole — registered so the radius eases in/out               */
+/* ------------------------------------------------------------------ */
+
+@property --r {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+.reveal {
+  --r: 0px;
+  transition: --r 0.3s ease;
+}
+
+.reveal.is-active {
+  --r: clamp(120px, 15vw, 220px);
+}
+
+.reveal-top {
+  z-index: 1;
+  -webkit-mask: url(#revealMask);
+  mask: url(#revealMask);
+}
+
+.reveal-shape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.reveal-mask-shape,
+.reveal-edge {
+  cx: var(--mx, 50%);
+  cy: var(--my, 50%);
+  r: var(--r, 0px);
+}
+
+.reveal-edge {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.95);
+  stroke-width: 2.5;
+}
+
+.reveal-edge-glow {
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.85))
+    drop-shadow(0 0 11px rgba(255, 255, 255, 0.5));
+}
+
+/* Forced (keyboard) reveal — drop the apparatus, show the whole suit. */
+.reveal.is-forced .reveal-top {
+  -webkit-mask: none;
+  mask: none;
+}
+
+.reveal.is-forced .reveal-shape {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Name / role overlay — above the shape, inert to the pointer         */
+/* ------------------------------------------------------------------ */
+
+.reveal-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  padding: clamp(1.75rem, 5svh, 3.5rem) clamp(1.25rem, 6vw, 5rem);
+  pointer-events: none;
+}
+
+.reveal-name {
+  display: block;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6.4vw, 5.2rem);
+  font-weight: 750;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--hero-fg, #efe9d8);
+}
